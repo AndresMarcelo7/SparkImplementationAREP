@@ -1,6 +1,6 @@
-# MicroSpringBoot
+# Spark Framework Implementation
 
-A Solution for AREP Workshop "Micro Spring boot - server"
+A Solution for AREP Workshop "Spark - server"
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://microspringarep.herokuapp.com/)
 [![CircleCI](https://circleci.com/gh/AndresMarcelo7/MicroSpringboot.svg?style=svg)](https://circleci.com/gh/AndresMarcelo7/MicroSpringboot)
 
