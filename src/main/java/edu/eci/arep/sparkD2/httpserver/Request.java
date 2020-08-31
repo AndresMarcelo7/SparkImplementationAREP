@@ -7,9 +7,22 @@ public class Request {
     private String method;
     private String path;
     private HashMap<String,String> headers;
+    private String body;
 
     public Request() {
-        headers = new HashMap<>();
+        this.headers = new HashMap<>();
+        this.method="";
+        this.path="";
+        this.body="";
+
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getMethod() {

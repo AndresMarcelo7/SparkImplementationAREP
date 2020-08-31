@@ -1,20 +1,8 @@
 package edu.eci.arep.sparkD2.httpserver;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.*;
 import edu.eci.arep.sparkD2.sparkD;
-import org.bson.Document;
-import static com.mongodb.client.model.Filters.eq;
-import com.mongodb.client.model.Projections;
-
-import java.lang.reflect.Array;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class HttpServer extends Thread{
     boolean running;
@@ -24,25 +12,25 @@ public class HttpServer extends Thread{
     Socket clientSocket;
     PrintStream out;
     BufferedReader in;
-    MongoClientURI uri;
-    MongoClient mongoClient;
-
     public HttpServer() {
         serverSocket = null;
         String requestMessageLine;
         running=true;
-        uri = new MongoClientURI(
-                "mongodb+srv://AREPUser:AREPUser123@arepdbserver.po3hu.gcp.mongodb.net/sample_mflix.movies?retryWrites=true&w=majority");
-        mongoClient = new MongoClient(uri);
 
         try {
-            serverSocket = new ServerSocket(36000);
+            serverSocket = new ServerSocket(getPort());
         } catch (IOException e) {
             System.err.println("Could not listen on port: 35000.");
             System.exit(1);
         }
     }
 
+    private static int getPort() {
+        if (System.getenv("PORT") != null) {
+            return Integer.parseInt(System.getenv("PORT"));
+        }
+        return 36000;
+    }
 
     public void run(){
         try {
@@ -50,6 +38,7 @@ public class HttpServer extends Thread{
                 clientSocket = null;
                 try {
                     System.out.println("Listo para recibir ...");
+                    //System.out.println(serverSocket.accept()); postman ¿wtf?
                     clientSocket = serverSocket.accept();
                 } catch (IOException e) {
                     System.err.println("Accept failed.");
@@ -63,7 +52,7 @@ public class HttpServer extends Thread{
                 ArrayList<String> header = new ArrayList<>();
                 while ((inputLine = in.readLine()) != null) {
                     header.add(inputLine);
-                    if (!in.ready()) {
+                    if (!in.ready()||inputLine.length()==0) {
                         break;
                     }
                     if (!firstLine) {
@@ -71,12 +60,23 @@ public class HttpServer extends Thread{
                         req.setPath(data[1]);
                         req.setMethod(data[0]);
                         firstLine = true;
-                    } else {
-                        String[] data = inputLine.split(":");
-                        req.setHeader(data[0], data[1]);
+                    }  else if(inputLine.length()>0){
+                        String[] entry = inputLine.split(":");
+                        req.setHeader(entry[0], entry[1]);
                     }
+
                 }
-                handleRequest(req);
+                System.out.println(req.getPath() + req.getMethod());
+                System.out.println(req.getHeaders());
+                // Rellenar el body en caso de que la peticion sea de tipo POST
+                if(req.getMethod().equals("POST")){
+                    StringBuilder payload = new StringBuilder();
+                    while(in.ready()){
+                        payload.append((char) in.read());
+                    }
+                    req.setBody(payload.toString());
+                }
+                if (!req.getMethod().equals("")) handleRequest(req);
                 in.close();
                 clientSocket.close();
             }
@@ -87,14 +87,18 @@ public class HttpServer extends Thread{
     }
 
     private void handleRequest(Request request) throws IOException {
-        Response endp = sparkD.exec(request);
-        if (endp!= null){
-            headerGenerator("salida."+endp.getMimeType());
-            out.print(endp.getBody());
+        String fileName = request.getPath();
+        if (fileName.equals("/")){
+            fileName = "/index.html";
+            request.setPath("/index.html");
         }
-        else {
-            String fileName = request.getPath();
-            fileName = fileName.equals("/") ? "/index.html" : fileName;
+        Response endp = sparkD.exec(request); //PRIMERO MIRO SI ES UN ENDPOINT FIJADO
+        if (endp!= null){
+            headerGenerator("salida."+endp.getMimeType().split("/")[1]);
+            out.print(endp.getBody());
+            out.close();
+        }
+        else if (request.getMethod().equals("GET") && request.getPath().contains(".")) {
             File file = new File(FILE_PATH + fileName);
             if (file.exists()) {
                 InputStream f = new FileInputStream(FILE_PATH + fileName);
@@ -105,12 +109,15 @@ public class HttpServer extends Thread{
                     out.write(a, 0, n);
                 }
                 //getDb("Drama");
-                out.close();
+
             } else {
-                out.print("HTTP/1.0 404 Not Found \r\n" + "Content-type: text/html" + "\r\n\r\n");
-                out.print("<h1> 404 File not found </h1>");
-                out.close();
+                notFound();
+
             }
+            out.close();
+        }
+        else{
+            notFound();
         }
 
         }
@@ -132,22 +139,10 @@ public class HttpServer extends Thread{
                 "Content-type: "+mimeType+"\r\n\r\n");
     }
 
-    private void getDb(String filter){
-        MongoDatabase database = mongoClient.getDatabase("sample_mflix");
-        MongoCollection<Document> collection =database.getCollection("movies");
-        FindIterable fit = collection.find();
-        ArrayList<Document> docs = new ArrayList<Document>();
-        fit.into(docs);
-        for (Document doc : docs) {
-            if (doc.get(filter)!= null){
-                ArrayList lol = (ArrayList)doc.get("genres");
-                if (lol.contains("Drama")) out.print(doc.get("title"));
-            }
-            else{
-                continue;
-            }
-
-        }
+    private void notFound(){
+        out.print("HTTP/1.0 404 Not Found \r\n" + "Content-type: text/html" + "\r\n\r\n");
+        out.print("<h1> 404 File not found </h1>");
+        out.close();
 
     }
 

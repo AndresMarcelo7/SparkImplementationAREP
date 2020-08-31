@@ -14,6 +14,9 @@ public class sparkD {
         ep.put("GET"+path,f);
     }
 
+    public static void post(String path, BiFunction<Request,Response,String> f){
+        ep.put("POST"+path,f);}
+
     public static Response exec(Request request){
         String k = request.getMethod()+request.getPath();
         if (ep.containsKey(k)){
@@ -23,7 +26,7 @@ public class sparkD {
             return response;
         }
         else{
-            System.out.println("Alo?");
+            System.out.println(k);
             return null;
         }
     }
