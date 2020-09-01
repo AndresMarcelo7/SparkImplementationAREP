@@ -27,7 +27,8 @@ https://templatemo.com/tm-520-highway
 		<script type="text/javascript">
 		function lol () {
             var postPromise = $.ajax({
-                url: "https://marcelo-spark-arep.herokuapp.com/testPost",
+				/* https://marcelo-spark-arep.herokuapp.com/ */
+                url: " https://marcelo-spark-arep.herokuapp.com/testPost",
                 type: 'POST',
                 data: document.getElementById("fname").value,
                 error: function (jqxhr,status,exception) {
@@ -40,12 +41,6 @@ https://templatemo.com/tm-520-highway
             }
             });
 			}
-			
-			function lil (restaurant,callback) {
-            $.getJSON("http://localhost:36000?user="+restaurant,function(data){
-                callback(data);
-				console.log(data);
-            },null)}
 		</script>
 		
 		
