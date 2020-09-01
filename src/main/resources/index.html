@@ -297,7 +297,7 @@ https://templatemo.com/tm-520-highway
     $.ajax({
   url: 'https://marcelo-spark-arep.herokuapp.com/testPost',
   type:'POST',
-  data: {"name":name},
+  data:"{name:'" + name + "'}",
   contentType: "application/json",
   dataType: 'json',
   success: function(output_string){
