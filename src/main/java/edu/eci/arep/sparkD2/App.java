@@ -13,9 +13,9 @@ import java.io.IOException;
 public class App 
 {
     public static void main( String[] args ) throws IOException {
-        DBConnection db = new DBConnection();
         HttpServer serv = new HttpServer();
         serv.start();
+        DBConnection db = serv.getDb();
         System.out.println("Iniciando get Request");
         sparkD.get("/testGet",((request, response) -> "If you are seeing this, The test endpoint worked succesfully! :D YAY"));
 
@@ -45,17 +45,9 @@ public class App
         }
         );
         sparkD.post("/testPost",((request, response) -> {
+            db.insertData(request.getBody());
             response.setMimeType("text/html");
-            System.out.println("AQUI LOL "+ request.getBody());
-            if (request.getBody()!="" || request.getBody()!=" "){
-                db.insertData(request.getBody());
-                return "Hello! " + request.getBody() +" Your POST request was succesfull and your name was added into the database! I'm gonna give you this random number :D " +  Math.floor(Math.random() * Math.floor(10));
-
-            }
-            else{
-                return "Woops! something went wrong :O";
-            }
-
+            return "Hello! " + request.getBody() +" Your POST request was succesfull and your name was added into the database! I'm gonna give you this random number :D " +  Math.floor(Math.random() * Math.floor(10));
         }));
     }
 }

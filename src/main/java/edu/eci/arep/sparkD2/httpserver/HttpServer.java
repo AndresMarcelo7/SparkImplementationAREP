@@ -1,4 +1,5 @@
 package edu.eci.arep.sparkD2.httpserver;
+import edu.eci.arep.sparkD2.data.DBConnection;
 import edu.eci.arep.sparkD2.sparkD;
 import java.net.*;
 import java.io.*;
@@ -12,10 +13,12 @@ public class HttpServer extends Thread{
     Socket clientSocket;
     PrintStream out;
     BufferedReader in;
+    DBConnection db;
     public HttpServer() {
         serverSocket = null;
         String requestMessageLine;
         running=true;
+        db = new DBConnection();
 
         try {
             serverSocket = new ServerSocket(getPort());
@@ -149,7 +152,7 @@ public class HttpServer extends Thread{
 
     }
 
-
-
-
+    public DBConnection getDb() {
+        return db;
+    }
 }
