@@ -22,24 +22,11 @@ https://templatemo.com/tm-520-highway
         <link rel="stylesheet" href="css/templatemo-style.css">
 
         <link href="https://fonts.googleapis.com/css?family=Kanit:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
 
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-		<script type="text/javascript">
-		function lol () {
-		var data= "ferney";
-         fetch('https://marcelo-spark-arep.herokuapp.com/testPost', {
-                            method: 'post',
-                            body: JSON.stringify({
-                                Password: data,// this is posted on another server
-                            })
-                        }).then(function (res) {
-                            return res.text();
-                        }).then((body)=> {
-                           console.log(body)// body can be used to get data from another server
-                         });
-			}
-		
-		</script>
+
 		
 		
 		
@@ -66,7 +53,7 @@ https://templatemo.com/tm-520-highway
 			  <a href="/testGet"> Go to GET ENDPOINT TEST</a>
 			  <br/>
 			  <input type="text" id="fname" name="fname" placeholder="Type your name here :D">
-			  <button onclick="lol()"> click here to Say hello to the server sending a POST :D</button>
+			  <Button id="postBot" name="postBot"> click here to Say hello to the server sending a POST :D</Button>
 			  <br/>
 			  <a href="/testDB"> Click here to see all people who said Hello!(from a MongoDB Database!)</a>
 			  
@@ -295,13 +282,33 @@ https://templatemo.com/tm-520-highway
       </div>
     </section>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 
     <script src="js/vendor/bootstrap.min.js"></script>
     
     <script src="js/plugins.js"></script>
     <script src="js/main.js"></script>
+			<script type="text/javascript">
+		/* https://marcelo-spark-arep.herokuapp.com/testPost*/
+			$(document).ready(function() {
+			$('#postBot').click(function(){
+    var name= "johns";
+    $.ajax({
+  url: 'https://marcelo-spark-arep.herokuapp.com/testPost',
+  type:'POST',
+  data: "{name:'" + name + "'}",
+  contentType: "application/json",
+  dataType: 'json',
+  success: function(output_string){
+     console.log("siu?")
+    } // End of success function of ajax form
+   }); // End of ajax call
+});
+});
+			
+		
+		</script>
 
     
 </body>
