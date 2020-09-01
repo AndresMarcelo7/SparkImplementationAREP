@@ -13,13 +13,10 @@ public class HttpServer extends Thread{
     Socket clientSocket;
     PrintStream out;
     BufferedReader in;
-    DBConnection db;
     public HttpServer() {
         serverSocket = null;
         String requestMessageLine;
         running=true;
-        db = new DBConnection();
-
         try {
             serverSocket = new ServerSocket(getPort());
         } catch (IOException e) {
@@ -152,7 +149,4 @@ public class HttpServer extends Thread{
 
     }
 
-    public DBConnection getDb() {
-        return db;
-    }
 }

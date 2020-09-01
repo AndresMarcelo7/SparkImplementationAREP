@@ -21,6 +21,7 @@ public class DBConnection {
         mongoClient = new MongoClient(uri);
     }
     public ArrayList<String[]> getNames(){
+
         MongoDatabase database = mongoClient.getDatabase("AREPLab3");
         MongoCollection<Document> collection =database.getCollection("AREP");
         FindIterable fit = collection.find();
@@ -37,6 +38,7 @@ public class DBConnection {
     }
 
     public void insertData(String message){
+        mongoClient = new MongoClient(uri);
         MongoDatabase database = mongoClient.getDatabase("AREPLab3");
         MongoCollection<Document> collection =database.getCollection("AREP");
         Document document=new Document();
