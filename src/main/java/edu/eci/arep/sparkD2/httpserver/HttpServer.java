@@ -76,7 +76,8 @@ public class HttpServer extends Thread{
                     }
                     req.setBody(payload.toString());
                 }
-                if (!req.getMethod().equals("")) handleRequest(req);
+                if ((!req.getBody().equals("") && req.getMethod().equals("POST")) || req.getBody().equals("GET"))
+                    handleRequest(req);
                 in.close();
                 clientSocket.close();
             }
