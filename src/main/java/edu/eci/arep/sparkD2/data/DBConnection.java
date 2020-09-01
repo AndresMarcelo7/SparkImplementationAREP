@@ -31,9 +31,6 @@ public class DBConnection {
             if (doc.get("mensaje")!= null && doc.get("fecha")!=null){
                 results.add(new String[]{doc.get("mensaje").toString(), doc.get("fecha").toString()});
             }
-            else{
-                continue;
-            }
         }
         return results;
 

@@ -25,6 +25,13 @@
       <artifactId>mongo-java-driver</artifactId>
       <version>3.12.7</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-core -->
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongodb-driver-core</artifactId>
+      <version>4.1.0</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
     <dependency>
       <groupId>org.slf4j</groupId>
