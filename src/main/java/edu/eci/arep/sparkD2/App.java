@@ -13,9 +13,9 @@ import java.io.IOException;
 public class App 
 {
     public static void main( String[] args ) throws IOException {
-        DBConnection db = new DBConnection();
         HttpServer serv = new HttpServer();
         serv.start();
+        DBConnection db = new DBConnection();
         System.out.println("Iniciando get Request");
         sparkD.get("/testGet",((request, response) -> "If you are seeing this, The test endpoint worked succesfully! :D YAY"));
         sparkD.get("/testDB", (request, response) ->  {
