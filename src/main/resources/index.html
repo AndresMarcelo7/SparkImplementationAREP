@@ -26,22 +26,19 @@ https://templatemo.com/tm-520-highway
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 		<script type="text/javascript">
 		function lol () {
-            var postPromise = $.ajax({
-				/* https://marcelo-spark-arep.herokuapp.com/ */
-                url: "https://marcelo-spark-arep.herokuapp.com/testPost",
-                type: 'POST',
-                data: "hernando",
-                error: function (jqxhr,status,exception) {
-                    alert('Exception:' ,exception);
-                },
-				 success: function (data) {
-				 console.log(data)
-				alert(data);
-                /*use response to innerHTML into a div here*/
-				
-            }
-            });
+		var data= "ferney";
+         fetch('https://marcelo-spark-arep.herokuapp.com/testPost', {
+                            method: 'post',
+                            body: JSON.stringify({
+                                Password: data,// this is posted on another server
+                            })
+                        }).then(function (res) {
+                            return res.text();
+                        }).then((body)=> {
+                           console.log(body)// body can be used to get data from another server
+                         });
 			}
+		
 		</script>
 		
 		
