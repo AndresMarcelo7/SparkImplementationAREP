@@ -28,16 +28,20 @@ https://templatemo.com/tm-520-highway
 		function lol () {
             var postPromise = $.ajax({
 				/* https://marcelo-spark-arep.herokuapp.com/ */
-                url: " https://marcelo-spark-arep.herokuapp.com/testPost",
+                url: "https://marcelo-spark-arep.herokuapp.com/testPost",
                 type: 'POST',
                 data: document.getElementById("fname").value,
                 error: function (jqxhr,status,exception) {
                     alert('Exception:' ,exception);
                 },
 				 success: function (data) {
+				 if (data===""){
+					alert("Something went wrong try again")
+				 }else{
+				 console.log(data)
+				alert(data);}
                 /*use response to innerHTML into a div here*/
-				console.log(data)
-				alert(data);
+				
             }
             });
 			}
