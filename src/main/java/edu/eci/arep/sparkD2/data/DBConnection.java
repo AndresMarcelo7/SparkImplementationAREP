@@ -1,6 +1,8 @@
 package edu.eci.arep.sparkD2.data;
 
+
 import com.mongodb.MongoClient;
+
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -15,11 +17,9 @@ public class DBConnection {
     MongoClient mongoClient;
 
     public DBConnection() {
-        uri = new MongoClientURI(
-                "mongodb+srv://AREPUser:AREPUser123@arepdbserver.po3hu.gcp.mongodb.net/AREPLab3.AREP?retryWrites=true&w=majority");
+        uri = new MongoClientURI("mongodb+srv://AREPUser:AREPUser123@arepdbserver.po3hu.gcp.mongodb.net/AREPLab3.AREP?retryWrites=true&w=majority");
         mongoClient = new MongoClient(uri);
     }
-
     public ArrayList<String[]> getNames(){
         MongoDatabase database = mongoClient.getDatabase("AREPLab3");
         MongoCollection<Document> collection =database.getCollection("AREP");

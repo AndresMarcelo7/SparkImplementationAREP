@@ -17,13 +17,7 @@ public class App
         HttpServer serv = new HttpServer();
         serv.start();
         System.out.println("Iniciando get Request");
-
-
         sparkD.get("/testGet",((request, response) -> "If you are seeing this, The test endpoint worked succesfully! :D YAY"));
-
-
-
-
         sparkD.get("/testDB", (request, response) ->  {
             StringBuilder d = new StringBuilder();
             for (String[] s: db.getNames()){
