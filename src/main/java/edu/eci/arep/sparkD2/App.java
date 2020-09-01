@@ -46,6 +46,7 @@ public class App
         );
         sparkD.post("/testPost",((request, response) -> {
             response.setMimeType("text/html");
+            System.out.println("AQUI LOL "+ request.getBody());
             if (request.getBody()!="" || request.getBody()!=" "){
                 db.insertData(request.getBody());
                 return "Hello! " + request.getBody() +" Your POST request was succesfull and your name was added into the database! I'm gonna give you this random number :D " +  Math.floor(Math.random() * Math.floor(10));
