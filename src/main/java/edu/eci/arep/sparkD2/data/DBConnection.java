@@ -17,7 +17,7 @@ public class DBConnection {
     MongoClient mongoClient;
 
     public DBConnection() {
-        uri = new MongoClientURI("mongodb+srv://AREPUser:AREPUser123@arepdbserver.po3hu.gcp.mongodb.net/AREPLab3.AREP?retryWrites=true&w=majority");
+        uri = new MongoClientURI("mongodb+srv://AREPUser:AREPUser123@arepdbserver.po3hu.gcp.mongodb.net/AREPLab3?retryWrites=true&w=majority");
         mongoClient = new MongoClient(uri);
     }
     public ArrayList<String[]> getNames(){
