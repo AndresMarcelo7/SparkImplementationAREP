@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/* edu.eci.arep.sparkD2.App
+web: java $JAVA_OPTS -cp  target/SparkD2-1.0-SNAPSHOT.jar edu.eci.arep.sparkD2.App
