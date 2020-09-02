@@ -58,6 +58,7 @@ public class HttpServer extends Thread{
 
         while ((inputLine = in.readLine()) != null) {
             header.add(inputLine);
+            System.out.println(inputLine);
             if (!in.ready()||inputLine.length()==0) {
                 break;
             }
@@ -79,13 +80,14 @@ public class HttpServer extends Thread{
                 StringBuilder payload = new StringBuilder();
                 while (in.ready()) {
                     payload.append((char) in.read());
+                    System.out.println("PAYLOAD ------->" + payload.toString());
                 }
                 req.setBody(payload.toString());
             }
 
         //req.getBody().equals("GET")|| (req.getMethod().equals("POST") && !req.getBody().equals(""))
-        System.out.println("Body: " +  req.getBody().equals("") +" " + req.getMethod());
-        System.out.println(req.getBody() + "\n" + req.getMethod() + "\n" + req.getHeaders() + "\n" + req.getPath() );
+        //System.out.println("Body: " +  req.getBody().equals("") +" " + req.getMethod());
+        //System.out.println(req.getBody() + "\n" + req.getMethod() + "\n" + req.getHeaders() + "\n" + req.getPath() );
         if ((req.getMethod().equals("GET"))||(req.getMethod().equals("POST") && (!req.getBody().equals(""))))
             handleRequest(req,clientSocket);
         in.close();
@@ -147,6 +149,7 @@ public class HttpServer extends Thread{
             mimeType="application/octet-stream";
         out.print("HTTP/1.0 200 OK\r\n"+
                 "Content-type: "+mimeType+"\r\n\r\n");
+        out.close();
     }
 
     private void notFound(){
