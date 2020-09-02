@@ -87,12 +87,11 @@ public class HttpServer extends Thread{
         StringBuilder body = new StringBuilder();
         if (req.getMethod().equals("POST")) {
             int c = 0;
-            int cl = Integer.parseInt(req.getHeader("Content-Length").split(" ")[1]);
+            int cl = Integer.parseInt(req.getHeader("Content-Length").trim());
             for (int i = 0; i < cl  ; i++) {
                 c = in.read();
                 body.append((char) c);
                 System.out.println("PAYLOADDDDDDDD ----->" + body.toString());
-                //Log.d("JCD", "POST: " + ((char) c) + " " + c);
             }
             req.setBody(body.toString());
         }
