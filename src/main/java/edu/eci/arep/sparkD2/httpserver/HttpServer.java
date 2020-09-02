@@ -55,7 +55,7 @@ public class HttpServer extends Thread{
         boolean firstLine = false;
         Request req = new Request();
         ArrayList<String> header = new ArrayList<>();
-        synchronized(req){
+
         while ((inputLine = in.readLine()) != null) {
             header.add(inputLine);
             if (!in.ready()||inputLine.length()==0) {
@@ -72,11 +72,9 @@ public class HttpServer extends Thread{
             }
 
         }
-        }
         //System.out.println(req.getPath() + req.getMethod());
         //System.out.println(req.getHeaders());
         // Rellenar el body en caso de que la peticion sea de tipo POST
-        synchronized (req) {
             if (req.getMethod().equals("POST")) {
                 StringBuilder payload = new StringBuilder();
                 while (in.ready()) {
@@ -84,7 +82,7 @@ public class HttpServer extends Thread{
                 }
                 req.setBody(payload.toString());
             }
-        }
+
         //req.getBody().equals("GET")|| (req.getMethod().equals("POST") && !req.getBody().equals(""))
         System.out.println("Body: " +  req.getBody().equals("") +" " + req.getMethod());
         if ((req.getMethod().equals("GET"))||(req.getMethod().equals("POST") && (!req.getBody().equals(""))))
