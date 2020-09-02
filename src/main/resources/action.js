@@ -13,9 +13,9 @@ btn.addEventListener('click',() =>{
         })
 		*/
 		 $.ajax({
-          type: 'POST', url: 'https://marcelo-spark-arep.herokuapp.com/testPost', data: {
+          type: 'POST', url: 'https://marcelo-spark-arep.herokuapp.com/testPost', dataType: "json",data:JSON.stringify({
             email: "test@email.com"
-          },
+          }),
         }).done(function(res) {
           console.log(res);
         })
