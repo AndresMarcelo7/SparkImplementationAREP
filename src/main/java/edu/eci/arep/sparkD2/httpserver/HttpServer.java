@@ -149,7 +149,7 @@ public class HttpServer extends Thread{
             mimeType="application/octet-stream";
         out.print("HTTP/1.0 200 OK\r\n"+
                 "Content-type: "+mimeType+"\r\n\r\n");
-        out.close();
+        
     }
 
     private void notFound(){
