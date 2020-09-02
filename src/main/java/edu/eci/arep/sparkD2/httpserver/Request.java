@@ -45,6 +45,10 @@ public class Request {
         return headers;
     }
 
+    public String getHeader(String key){
+        return headers.get(key);
+    }
+
     public void setHeaders(HashMap<String, String> headers) {
         this.headers = headers;
     }

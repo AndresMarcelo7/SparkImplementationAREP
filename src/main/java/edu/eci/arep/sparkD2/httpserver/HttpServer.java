@@ -76,14 +76,28 @@ public class HttpServer extends Thread{
         //System.out.println(req.getPath() + req.getMethod());
         //System.out.println(req.getHeaders());
         // Rellenar el body en caso de que la peticion sea de tipo POST
-        if(req.getMethod().equals("POST")){
+        /*if(req.getMethod().equals("POST")){
             StringBuilder payload = new StringBuilder();
             while(in.ready()){
                 payload.append((char) in.read());
                 System.out.println("PAYLOADDDDDDD-------->" + payload.toString());
             }
             req.setBody(payload.toString());
+        }*/
+        StringBuilder body = new StringBuilder();
+        if (req.getMethod().equals("POST")) {
+            int c = 0;
+            int cl = Integer.parseInt(req.getHeader("Content-Length").split(" ")[1]);
+            for (int i = 0; i < cl  ; i++) {
+                c = in.read();
+                body.append((char) c);
+                System.out.println("PAYLOADDDDDDDD ----->" + body.toString());
+                //Log.d("JCD", "POST: " + ((char) c) + " " + c);
+            }
+            req.setBody(body.toString());
         }
+
+
 
         //req.getBody().equals("GET")|| (req.getMethod().equals("POST") && !req.getBody().equals(""))
         //System.out.println("Body: " +  req.getBody().equals("") +" " + req.getMethod());
