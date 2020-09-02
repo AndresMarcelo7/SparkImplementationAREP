@@ -6,6 +6,7 @@ btn.addEventListener('click',() =>{
 	axios.post('https://marcelo-spark-arep.herokuapp.com/testPost', reqFoodId,deleteFoodConfig)
         .then(res => {
             console.log("succesfull");
+			alert(res);
         })
         .catch( error =>{
             console.log("Intentalo de nuevo");
