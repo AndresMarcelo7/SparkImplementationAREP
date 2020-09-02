@@ -59,9 +59,6 @@ public class HttpServer extends Thread{
         while ((inputLine = in.readLine()) != null) {
             header.add(inputLine);
             System.out.println(inputLine);
-            if (!in.ready()||inputLine.length()==0) {
-                break;
-            }
             if (!firstLine) {
                 String[] data = inputLine.split(" ");
                 req.setPath(data[1]);
@@ -71,19 +68,22 @@ public class HttpServer extends Thread{
                 String[] entry = inputLine.split(":");
                 req.setHeader(entry[0], entry[1]);
             }
+            if (!in.ready()||inputLine.length()==0) {
+                break;
+            }
 
         }
         //System.out.println(req.getPath() + req.getMethod());
         //System.out.println(req.getHeaders());
         // Rellenar el body en caso de que la peticion sea de tipo POST
-            if (req.getMethod().equals("POST")) {
-                StringBuilder payload = new StringBuilder();
-                while (in.ready()) {
-                    payload.append((char) in.read());
-                    System.out.println("PAYLOAD ------->" + payload.toString());
-                }
-                req.setBody(payload.toString());
+        if(req.getMethod().equals("POST")){
+            StringBuilder payload = new StringBuilder();
+            while(in.ready()){
+                payload.append((char) in.read());
+                System.out.println("PAYLOADDDDDDD-------->" + payload.toString());
             }
+            req.setBody(payload.toString());
+        }
 
         //req.getBody().equals("GET")|| (req.getMethod().equals("POST") && !req.getBody().equals(""))
         //System.out.println("Body: " +  req.getBody().equals("") +" " + req.getMethod());
@@ -149,7 +149,7 @@ public class HttpServer extends Thread{
             mimeType="application/octet-stream";
         out.print("HTTP/1.0 200 OK\r\n"+
                 "Content-type: "+mimeType+"\r\n\r\n");
-        
+
     }
 
     private void notFound(){
