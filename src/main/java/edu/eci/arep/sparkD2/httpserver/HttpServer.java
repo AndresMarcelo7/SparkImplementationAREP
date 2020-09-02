@@ -55,6 +55,7 @@ public class HttpServer extends Thread{
         boolean firstLine = false;
         Request req = new Request();
         ArrayList<String> header = new ArrayList<>();
+        synchronized(req){
         while ((inputLine = in.readLine()) != null) {
             header.add(inputLine);
             if (!in.ready()||inputLine.length()==0) {
@@ -70,6 +71,7 @@ public class HttpServer extends Thread{
                 req.setHeader(entry[0], entry[1]);
             }
 
+        }
         }
         //System.out.println(req.getPath() + req.getMethod());
         //System.out.println(req.getHeaders());
