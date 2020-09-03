@@ -1,17 +1,27 @@
 package edu.eci.arep.sparkD2.httpserver;
+
 import edu.eci.arep.sparkD2.data.DBConnection;
 import edu.eci.arep.sparkD2.sparkD;
+
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class HttpServer extends Thread{
-    boolean running;
+/**
+ * The Http server.
+ */
+public class HttpServer extends Thread {
+    private boolean running;
     private final static String FILE_PATH = "./src/main/resources";
     private final static String TEXT_HEADER = "HTTP/1.1 200 \r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/html\r\n\r\n";
-    OutputStream outputStream;
+    private OutputStream outputStream;
 
-    private static int getPort() {
+    /**
+     * Gets port from the environment.
+     *
+     * @return the port
+     */
+    public static int getPort() {
         if (System.getenv("PORT") != null) {
             return Integer.parseInt(System.getenv("PORT"));
         }
@@ -48,7 +58,13 @@ public class HttpServer extends Thread{
 
     }
 
-    private void readRequest(Socket clientSocket) throws IOException{
+    /**
+     * Read request receives the client socket and sets the request(GET/POST) Information into a REQUEST object.
+     *
+     * @param clientSocket the client socket
+     * @throws IOException the io exception
+     */
+    public void readRequest(Socket clientSocket) throws IOException {
         outputStream = clientSocket.getOutputStream();
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         String inputLine;
@@ -64,11 +80,11 @@ public class HttpServer extends Thread{
                 req.setPath(data[1]);
                 req.setMethod(data[0]);
                 firstLine = true;
-            }  else if(inputLine.length()>0){
+            } else if (inputLine.length() > 0) {
                 String[] entry = inputLine.split(":");
                 req.setHeader(entry[0], entry[1]);
             }
-            if (!in.ready()||inputLine.length()==0) {
+            if (!in.ready() || inputLine.length() == 0) {
                 break;
             }
 
@@ -88,7 +104,7 @@ public class HttpServer extends Thread{
         if (req.getMethod().equals("POST")) {
             int c = 0;
             int cl = Integer.parseInt(req.getHeader("Content-Length").trim());
-            for (int i = 0; i < cl  ; i++) {
+            for (int i = 0; i < cl; i++) {
                 c = in.read();
                 body.append((char) c);
                 System.out.println("PAYLOADDDDDDDD ----->" + body.toString());
@@ -97,32 +113,38 @@ public class HttpServer extends Thread{
         }
 
 
-
         //req.getBody().equals("GET")|| (req.getMethod().equals("POST") && !req.getBody().equals(""))
         //System.out.println("Body: " +  req.getBody().equals("") +" " + req.getMethod());
         //System.out.println(req.getBody() + "\n" + req.getMethod() + "\n" + req.getHeaders() + "\n" + req.getPath() );
-        if ((req.getMethod().equals("GET"))||(req.getMethod().equals("POST") && (!req.getBody().equals(""))))
-            handleRequest(req,clientSocket);
+        if ((req.getMethod().equals("GET")) || (req.getMethod().equals("POST") && (!req.getBody().equals(""))))
+            handleRequest(req, clientSocket);
         in.close();
         outputStream.close();
 
     }
 
 
-    private void handleRequest(Request request, Socket clientSocket) throws IOException {
+    /**
+     * Handle request receives a request and looks if the resource requested is a static file or an endpoint
+     * then, sends the response in a PrintStream.
+     *
+     * @param request      the request
+     * @param clientSocket the client socket
+     * @throws IOException the io exception
+     */
+    public void handleRequest(Request request, Socket clientSocket) throws IOException {
         String fileName = request.getPath();
-        PrintStream out = new PrintStream(outputStream,true);
-        if (fileName.equals("/")){
+        PrintStream out = new PrintStream(outputStream, true);
+        if (fileName.equals("/")) {
             fileName = "/index.html";
             request.setPath("/index.html");
         }
         Response endp = sparkD.exec(request); //PRIMERO MIRO SI ES UN ENDPOINT FIJADO
-        if (endp!= null){
-            headerGenerator("salida."+endp.getMimeType().split("/")[1]);
+        if (endp != null) {
+            headerGenerator("salida." + endp.getMimeType().split("/")[1]);
             out.print(endp.getBody());
             out.close();
-        }
-        else if (request.getMethod().equals("GET") && request.getPath().contains(".")) {
+        } else if (request.getMethod().equals("GET") && request.getPath().contains(".")) {
             File file = new File(FILE_PATH + fileName);
             if (file.exists()) {
                 InputStream f = new FileInputStream(FILE_PATH + fileName);
@@ -139,34 +161,41 @@ public class HttpServer extends Thread{
 
             }
             out.close();
-        }
-        else{
+        } else {
             notFound();
         }
 
-        }
+    }
 
 
-    private void headerGenerator(String filename){
-        PrintStream out = new PrintStream(outputStream,true);
-        String mimeType="text/plain";
+    /**
+     * Generates the header for each case extension of the requested file
+     *
+     * @param filename the filename
+     */
+    public void headerGenerator(String filename) {
+        PrintStream out = new PrintStream(outputStream, true);
+        String mimeType = "text/plain";
         if (filename.endsWith(".html") || filename.endsWith(".htm"))
-            mimeType="text/html";
+            mimeType = "text/html";
         if (filename.endsWith(".css"))
-            mimeType="text/css";
+            mimeType = "text/css";
         else if (filename.endsWith(".jpg") || filename.endsWith(".jpeg"))
-            mimeType="image/jpeg";
+            mimeType = "image/jpeg";
         else if (filename.endsWith(".gif"))
-            mimeType="image/gif";
+            mimeType = "image/gif";
         else if (filename.endsWith(".class"))
-            mimeType="application/octet-stream";
-        out.print("HTTP/1.0 200 OK\r\n"+
-                "Content-type: "+mimeType+"\r\n\r\n");
+            mimeType = "application/octet-stream";
+        out.print("HTTP/1.0 200 OK\r\n" +
+                "Content-type: " + mimeType + "\r\n\r\n");
 
     }
 
-    private void notFound(){
-        PrintStream out = new PrintStream(outputStream,true);
+    /**
+     * returns a 404 not found header
+     */
+    public void notFound() {
+        PrintStream out = new PrintStream(outputStream, true);
         out.print("HTTP/1.0 404 Not Found \r\n" + "Content-type: text/html" + "\r\n\r\n");
         out.print("<h1> 404 File not found </h1>");
         out.close();

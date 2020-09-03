@@ -7,11 +7,16 @@ import edu.eci.arep.sparkD2.httpserver.HttpServer;
 import java.io.IOException;
 
 /**
- * Hello world!
- *
+ * Main Application
  */
-public class App 
+public class App
 {
+    /**
+     * The entry point of application also it defines the Endpoints .
+     *
+     * @param args the input arguments
+     * @throws IOException the io exception
+     */
     public static void main( String[] args ) throws IOException {
         HttpServer serv = new HttpServer();
         serv.start();
