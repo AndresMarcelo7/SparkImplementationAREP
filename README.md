@@ -55,6 +55,7 @@ if you want to run the tests again please run the following command:
 ```
 C:\Users\User > mvn test
 ```
+Some BDD Tests are documented in [Documentation.pdf file](/Documentacion.pdf) 
 ## Run
 
 If you want to locally deploy the app use the following command:
